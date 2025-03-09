@@ -51,7 +51,6 @@ public class PatronService {
             patron.setPhoneNumber(patron.getPhoneNumber());
             patronRepository.saveAndFlush(patron);
             return ClassMapper.INSTANCE.entityToDto(patron);
-
         }
         throw new RequestNotValidException("There is no patron with id = "+id);
     }

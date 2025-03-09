@@ -78,10 +78,6 @@ public class BookController {
         System.out.println("Received Book DTO: " + bookDTO);
 
         Book book = new Book();
-
-        if(bookDTO.getPublicationYear() == null){
-            return new MyAPIResponse<>(false,400,"Publication year is required");
-        }
         book.setTitle(bookDTO.getTitle());
         book.setAuthor(bookDTO.getAuthor());
         book.setPublicationYear(bookDTO.getPublicationYear());
@@ -94,7 +90,7 @@ public class BookController {
 
     @Operation(summary = "Edit a book",description = "Edit a book by its Id")
     @PutMapping("/{id}")
-    public MyAPIResponse updateBook(@PathVariable Long id, @RequestBody Book book) {
+    public MyAPIResponse updateBook(@PathVariable Long id,@Valid @RequestBody BookDTO book) {
 
         return new MyAPIResponse<>(true,200,bookService.updateBook(id, book));
 
@@ -107,7 +103,5 @@ public class BookController {
 if(isDeleted){
         return new MyAPIResponse<>(true, 200, "Book deleted successfully");
     }
-    else{
-    return new MyAPIResponse<>(false,404,"There is no book with id: "+id);
-    }
+return null;
 }}

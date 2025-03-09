@@ -28,6 +28,12 @@ public class Book {
     @JsonManagedReference
     List<BorrowingRecord> borrowingRecords;
 
+    public Book(long l, String title, String author, String isbn, boolean available, Integer publicationYear) {
+    }
+
+    public Book() {
+    }
+
     @Override
     public String toString() {
         return "Book{" +

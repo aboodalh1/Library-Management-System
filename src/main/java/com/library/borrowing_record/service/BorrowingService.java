@@ -35,12 +35,12 @@ public class BorrowingService {
         Book demandedBook = bookRepository.findById(bookId).orElseThrow(
                 ()-> new RequestNotValidException("There is no book with this id: " + bookId)
         );
-        Patron patron = patronRepository.findById(patronId).orElseThrow(
-                ()-> new RequestNotValidException("There is no patron with id: " + patronId)
-        );
         if(!demandedBook.isAvailable()){
             throw new RequestNotValidException("This book is not available");
         }
+        Patron patron = patronRepository.findById(patronId).orElseThrow(
+                ()-> new RequestNotValidException("There is no patron with id: " + patronId)
+        );
         if(request.getDueDate().isBefore(request.getBorrowDate())){
             throw new RequestNotValidException("The borrow date must be after due date !");
         }
@@ -60,15 +60,15 @@ public class BorrowingService {
         Book demandedBook = bookRepository.findById(bookId).orElseThrow(
                 ()-> new RequestNotValidException("There is no book with this id: " + bookId)
         );
+        if(demandedBook.isAvailable()){
+            throw new RequestNotValidException("This book is already available");
+        }
         Patron patron = patronRepository.findById(patronId).orElseThrow(
                 ()-> new RequestNotValidException("There is no patron with id: " + patronId)
         );
         BorrowingRecord borrowingRecord = borrowingRecordRepository.findBorrowingRecordByBookAndPatronAndReturnDateIsNullAndStatusIs(demandedBook,patron,BorrowingStatus.Borrowed).orElseThrow(
                 ()-> new RequestNotValidException("There is no active borrowing record for book id: " + demandedBook.getId() +" from patron: " + patronId)
         );
-        if(demandedBook.isAvailable()){
-            throw new RequestNotValidException("This book is already available");
-        }
         if(endBorrowinDTO.getReturnDate().isBefore(borrowingRecord.getBorrowDate())){
             throw new RequestNotValidException("Return date must be after borrow date!");
         }

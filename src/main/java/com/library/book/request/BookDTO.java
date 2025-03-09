@@ -26,6 +26,15 @@ public class BookDTO {
     private boolean available = true;
 
 
+    public BookDTO(String title, String author, Integer publicationYear, String isbn, boolean available) {
+        this.title = title;
+        this.author = author;
+        this.publicationYear = publicationYear;
+        this.isbn = isbn;
+        this.available = available;
+    }
+
+
     public @NotBlank(message = "Title is required") String getTitle() {
         return title;
     }

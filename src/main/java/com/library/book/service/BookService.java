@@ -2,10 +2,12 @@ package com.library.book.service;
 
 
 import com.library.book.model.Book;
+import com.library.book.request.BookDTO;
 import com.library.book.response.BooksResponse;
 import com.library.book.respository.BookRepository;
 import com.library.utils.exceptions.NotFoundException;
 import com.library.utils.exceptions.RequestNotValidException;
+import com.library.utils.mapper.ClassMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -41,10 +43,16 @@ public class BookService {
     }
 
     @Transactional
-    public Book updateBook(Long id, Book updatedBook) {
+    public BooksResponse updateBook(Long id, BookDTO updatedBook) {
         if (bookRepository.existsById(id)) {
-            updatedBook.setId(id);
-            return bookRepository.save(updatedBook);
+            Book book =bookRepository.findById(id).orElse(null);
+            book.setAuthor(updatedBook.getAuthor());
+            book.setAvailable(updatedBook.isAvailable());
+            book.setIsbn(updatedBook.getIsbn());
+            book.setPublicationYear(updatedBook.getPublicationYear());
+            book.setTitle(updatedBook.getTitle());
+            bookRepository.saveAndFlush(book);
+            return ClassMapper.INSTANCE.entityToDto(book);
         }
         else{
             throw new NotFoundException("Book not found");
@@ -56,7 +64,7 @@ public class BookService {
             bookRepository.deleteById(id);
             return true;
         } else {
-            return false;
+           throw new NotFoundException("Not found book with id = "+id);
         }
     }
 }
