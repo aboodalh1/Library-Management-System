@@ -1,5 +1,9 @@
 package com.library.utils.exceptions;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,7 +25,25 @@ public class GlobalExceptionHandler {
         // Return the response with a 400 Bad Request status code
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<String> handleExpiredJwtException(ExpiredJwtException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("JWT token has expired.");
+    }
 
+    @ExceptionHandler(UnsupportedJwtException.class)
+    public ResponseEntity<String> handleUnsupportedJwtException(UnsupportedJwtException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("JWT token is unsupported.");
+    }
+
+    @ExceptionHandler(MalformedJwtException.class)
+    public ResponseEntity<String> handleMalformedJwtException(MalformedJwtException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("JWT token is invalid.");
+    }
+
+    @ExceptionHandler(SignatureException.class)
+    public ResponseEntity<String> handleSignatureException(SignatureException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("JWT signature is not valid.");
+    }
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handleNotFoundException(NotFoundException ex) {
         APIException errorResponse = new APIException(ex.getMessage(), HttpStatus.NOT_FOUND);

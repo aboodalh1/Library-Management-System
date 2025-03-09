@@ -9,7 +9,6 @@ import jakarta.validation.constraints.Pattern;
 @Getter
 @Setter
 public class PatronDTO {
-    private Long id; // Usually, ID is optional in DTOs, only used when needed.
 
     @NotBlank(message = "First name is required")
     @Size(max = 50, min = 3 ,message = "First name must be at most 50 and at least 3 characters")
@@ -27,13 +26,6 @@ public class PatronDTO {
     @Size(max = 255, message = "Address must be at most 255 characters")
     private String address;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public @NotBlank(message = "First name is required") @Size(max = 50, message = "First name must be at most 50 characters") String getFirstName() {
         return firstName;

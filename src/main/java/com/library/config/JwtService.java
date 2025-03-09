@@ -1,5 +1,6 @@
 package com.library.config;
 
+import com.library.utils.exceptions.UnAuthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -61,10 +62,12 @@ public class JwtService {
     }
 
     public Claims extractAllClaims(String token){
+
         return Jwts.parserBuilder().setSigningKey(getSignInKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+
     }
 
     private Key getSignInKey() {
