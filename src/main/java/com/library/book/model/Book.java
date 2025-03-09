@@ -1,7 +1,6 @@
 package com.library.book.model;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.library.borrowing_record.model.BorrowingRecord;
@@ -33,16 +32,6 @@ public class Book {
     @JsonManagedReference
     List<BorrowingRecord> borrowingRecords;
 
-    @Override
-    public String toString() {
-        return "Book{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", author='" + author + '\'' +
-                ", publicationYear=" + publicationYear +
-                ", isbn='" + isbn + '\'' +
-                '}';
-    }
 
     public Long getId() {
         return id;

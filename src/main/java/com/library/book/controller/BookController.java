@@ -13,6 +13,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -42,16 +46,14 @@ public class BookController {
                     )
             }
     )
+
     @GetMapping
-    public MyAPIResponse<List<Book>> getAllBooks() {
+    public ResponseEntity<MyAPIResponse<List<Book>>> getAllBooks() {
         List<Book> books = bookService.getAllBooks();
-        boolean success = books != null && !books.isEmpty();
-        int statusCode = success ? 200 : 404;
-        if(!success){
-            throw new NotFoundException("There is no book yet !");
-        }
-        return new MyAPIResponse<>(success, statusCode, books);
+
+        return ResponseEntity.ok(new MyAPIResponse<>(true, 200 , books));
     }
+
 
     @Operation(summary = "Get a specific book",
         description = "Get a specific book by its Id"
@@ -74,22 +76,16 @@ public class BookController {
                     ))
     )
     @PostMapping("/add_book")
-    public MyAPIResponse<?> addBook(@Valid @RequestBody BookDTO bookDTO) {
+    public MyAPIResponse<?> addBook(@Valid @RequestBody BookDTO request) {
 
-        Book book = new Book();
-        book.setTitle(bookDTO.getTitle());
-        book.setAuthor(bookDTO.getAuthor());
-        book.setPublicationYear(bookDTO.getPublicationYear());
-        book.setIsbn(bookDTO.getIsbn());
-        book.setAvailable(bookDTO.isAvailable());
-
-        Book savedBook = bookService.addBook(book);
+        Book savedBook = bookService.addBook(request);
         return new MyAPIResponse<>(true, 200, savedBook);
     }
 
     @Operation(summary = "Edit a book",description = "Edit a book by its Id")
+
     @PutMapping("/{id}")
-    public MyAPIResponse updateBook(@PathVariable Long id,@Valid @RequestBody BookDTO book) {
+    public MyAPIResponse<?> updateBook(@PathVariable Long id,@Valid @RequestBody BookDTO book) {
 
         return new MyAPIResponse<>(true,200,bookService.updateBook(id, book));
 

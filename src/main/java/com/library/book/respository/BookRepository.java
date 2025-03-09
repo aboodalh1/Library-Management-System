@@ -17,19 +17,15 @@ import java.util.Optional;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
 
-    @Cacheable(value = "books", key = "#id")
     Optional<Book> findById(Long id);
 
-    @Cacheable(value = "books", key = "'allBooks'")
     Page<Book> findAll(Pageable pageable);
 
-    @CacheEvict(value = "books", key = "'allBooks'")
     <S extends Book> S save(S entity);
 
-    @CachePut(value = "books", key = "#entity.id")
     <S extends Book> S saveAndFlush(S entity);
 
-    @CacheEvict(value = "books", key = "#id")
+
     void deleteById(Long id);
 
 }
