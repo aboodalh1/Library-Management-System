@@ -20,6 +20,7 @@ public class AspectClass {
     @Before("" +
             "execution(* com.library.book.service.*.*(..))"+
             "|| execution(* com.library.patron.service.*.*(..))" +
+            "|| execution(* com.library.librarian.service.*.*(..))" +
             "|| execution(* com.library.borrowingRecord.service.*.*(..))"
     )
     public void logBeforeMethod(JoinPoint joinPoint) {
@@ -29,6 +30,7 @@ public class AspectClass {
     @AfterThrowing("" +
             "execution(* com.library.book.service.*.*(..))"+
             "|| execution(* com.library.patron.service.*.*(..))" +
+            "|| execution(* com.library.librarian.service.*.*(..))" +
             "|| execution(* com.library.borrowingRecord.service.*.*(..))"
     )
     public void aspect(JoinPoint joinPoint) {
@@ -38,6 +40,7 @@ public class AspectClass {
     @Around("" +
             "execution(* com.library.book.service.*.*(..))"+
             "|| execution(* com.library.patron.service.*.*(..))" +
+            "|| execution(* com.library.librarian.service.*.*(..))" +
             "|| execution(* com.library.borrowingRecord.service.*.*(..))"
     )
     public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {

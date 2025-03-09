@@ -108,9 +108,6 @@ public class LibrarianAuthController {
             Principal connectedUser
     )
     {
-        System.out.println(request.getNewPassword());
-        System.out.println(request.getConfirmPassword());
-        System.out.println(request.getCurrentPassword());
         librarianService.changePassword(request , connectedUser);
         return ResponseEntity.accepted().body("Change password done successfully");
     }

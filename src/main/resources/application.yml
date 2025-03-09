@@ -22,6 +22,9 @@ spring:
     properties:
       format_sql: true
     show-sql: true
-
+  logging:
+    level:
+      root: INFO
+      com.library: DEBUG
 
 #jwtKey: ${SECRET_KEY}

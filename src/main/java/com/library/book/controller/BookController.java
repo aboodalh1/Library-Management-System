@@ -75,7 +75,6 @@ public class BookController {
     )
     @PostMapping("/add_book")
     public MyAPIResponse<?> addBook(@Valid @RequestBody BookDTO bookDTO) {
-        System.out.println("Received Book DTO: " + bookDTO);
 
         Book book = new Book();
         book.setTitle(bookDTO.getTitle());
