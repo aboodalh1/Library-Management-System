@@ -1,10 +1,9 @@
-package com.library.patron.controller;
+package com.library.patron.service;
 
 import com.library.patron.model.Patron;
 import com.library.patron.repository.PatronRepository;
 import com.library.patron.request.PatronDTO;
 import com.library.patron.response.PatronInfoResponse;
-import com.library.patron.service.PatronService;
 import com.library.utils.exceptions.NotFoundException;
 import com.library.utils.exceptions.RequestNotValidException;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.List;
 import java.util.Optional;
 
