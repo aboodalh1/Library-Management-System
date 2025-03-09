@@ -15,8 +15,8 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,12 +32,6 @@ public class Book {
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     @JsonManagedReference
     List<BorrowingRecord> borrowingRecords;
-
-    public Book(long l, String title, String author, String isbn, boolean available, Integer publicationYear) {
-    }
-
-    public Book() {
-    }
 
     @Override
     public String toString() {
