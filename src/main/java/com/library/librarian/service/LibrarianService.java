@@ -7,7 +7,8 @@ import com.library.librarian.request.AuthenticationRequest;
 import com.library.librarian.request.ChangePasswordRequest;
 import com.library.librarian.request.LibrarianRegisterRequest;
 import com.library.librarian.response.LibrarianAuthResponse;
-import com.library.utils.exception.TooManyRequestException;
+import com.library.utils.exceptions.TooManyRequestException;
+import com.library.utils.exceptions.InvalidCredentialsException;
 import com.library.utils.exceptions.RequestNotValidException;
 import com.library.utils.mapper.ClassMapper;
 import com.library.utils.validator.ObjectValidator;
@@ -18,7 +19,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -81,7 +81,7 @@ public class LibrarianService implements UserDetailsService {
 
         String userIp = httpServletRequest.getRemoteAddr();
         if (rateLimiterConfig.getBlockedIPs().contains(userIp)) {
-            throw new TooManyRequestException("Too many login attempts. Please try again later.");
+            throw new TooManyRequestException("Rate limit reached for login attemps. try again later.");
         }
 
         String rateLimiterKey = LOGIN_RATE_LIMITER + "-" + userIp;
@@ -96,7 +96,7 @@ public class LibrarianService implements UserDetailsService {
                                 request.getPassword()
                         ));
             } catch (AuthenticationException exception) {
-                throw new BadCredentialsException("invalid email or password");
+                throw new InvalidCredentialsException("invalid email or password");
             }
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -113,7 +113,7 @@ public class LibrarianService implements UserDetailsService {
         }
         else
             rateLimiterConfig.blockIP(userIp);
-        throw new TooManyRequestException("Too many login attempts, Please try again later.");
+        throw new TooManyRequestException("Rate limit reached for login attemps. try again later.");
     }
 
 

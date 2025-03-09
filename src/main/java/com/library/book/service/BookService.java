@@ -4,6 +4,8 @@ package com.library.book.service;
 import com.library.book.model.Book;
 import com.library.book.response.BooksResponse;
 import com.library.book.respository.BookRepository;
+import com.library.utils.exceptions.NotFoundException;
+import com.library.utils.exceptions.RequestNotValidException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -22,16 +24,7 @@ public class BookService {
 
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
-//                .stream()
-//                .map(book -> new BooksResponse(
-//                        book.getId(),
-//                        book.getTitle(),
-//                        book.getAuthor(),
-//                        book.getIsbn(),
-//                        book.isAvailable(),  // Assuming `isAvailable()` method exists in `Book`
-//                        book.getPublicationYear()
-//                ))
-//                .collect(Collectors.toList());
+
     }
 
 
@@ -39,7 +32,7 @@ public class BookService {
 
 
     public Book getBookById(Long id) {
-        if(!bookRepository.existsById(id)) throw new RuntimeException("Book not found");
+        if(!bookRepository.existsById(id)) throw new NotFoundException("Book not found");
         return bookRepository.findById(id).orElse(null);
     }
 
@@ -54,7 +47,7 @@ public class BookService {
             return bookRepository.save(updatedBook);
         }
         else{
-            throw new RuntimeException("Book not found");
+            throw new NotFoundException("Book not found");
         }
     }
 

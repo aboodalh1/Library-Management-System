@@ -1,6 +1,7 @@
 package com.library.patron.controller;
 import com.library.patron.model.Patron;
 import com.library.patron.request.PatronDTO;
+import com.library.patron.response.PatronInfoResponse;
 import com.library.patron.service.PatronService;
 import com.library.utils.response.MyAPIResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -59,7 +60,7 @@ public class PatronController {
             description = "Edit Patron by its Id"
     )
     @PutMapping("/{id}")
-    public MyAPIResponse<Patron> updatePatron(@PathVariable Long id, @RequestBody Patron patron) {
+    public MyAPIResponse<PatronInfoResponse> updatePatron(@PathVariable Long id, @Valid @RequestBody PatronDTO patron) {
         return new MyAPIResponse<>(true,200,patronService.updatePatron(id, patron));
     }
     @Operation(

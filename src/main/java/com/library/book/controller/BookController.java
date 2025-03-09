@@ -3,6 +3,8 @@ package com.library.book.controller;
 import com.library.book.model.Book;
 import com.library.book.request.BookDTO;
 import com.library.book.service.BookService;
+import com.library.librarian.request.LibrarianRegisterRequest;
+import com.library.utils.exceptions.NotFoundException;
 import com.library.utils.response.MyAPIResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -33,24 +35,9 @@ public class BookController {
                             content = @Content(
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = MyAPIResponse.class),
-                                    examples = @ExampleObject("""
-                        {
-                          "message": "Get all books",
-                          "status": "OK",
-                          "body": {
-                              "books": [
-                                  {
-                                      "id": "e8d4eeb8-1234-4a56-b57a-76abf6d55555",
-                                      "title": "Spring in Action",
-                                      "author": "Craig Walls",
-                                      "isbn": "9781617294945",
-                                      "Available":true
-                                      "publicationYear": "2020-06-01",
-                                  }
-                              ],
-                          }
-                        }
-                        """)
+                                    examples = @ExampleObject(
+                                            value = "{ \"message\": \"Get all books\", \"status\": \"OK\", \"body\": { \"books\": [ { \"id\": \"1\", \"title\": \"The Great Gatsby\", \"author\": \"Craig F. Scott Fitzgerald\", \"isbn\": \"9780743273565\", \"available\": true, \"publicationYear\": \"2020\" } ] } }"
+                                    )
                             )
                     )
             }
@@ -58,9 +45,11 @@ public class BookController {
     @GetMapping
     public MyAPIResponse<List<Book>> getAllBooks() {
         List<Book> books = bookService.getAllBooks();
-        System.out.println("Books retrieved: " + books);  // Check the list here
         boolean success = books != null && !books.isEmpty();
         int statusCode = success ? 200 : 404;
+        if(!success){
+            throw new NotFoundException("There is no book yet !");
+        }
         return new MyAPIResponse<>(success, statusCode, books);
     }
 
@@ -69,13 +58,21 @@ public class BookController {
     )
     @GetMapping("/{id}")
     public MyAPIResponse<?> getBookById(@PathVariable Long id) {
-        try {
+
         return new MyAPIResponse<>(true,200,bookService.getBookById(id));
-        }catch (RuntimeException e){
-            return new MyAPIResponse<>(false,404,"There is no book with id: "+id);
-        }
+
     }
-    @Operation(summary = "Add new book")
+    @Operation(summary = "Add new book",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = LibrarianRegisterRequest.class),
+                            examples = @ExampleObject(
+                                    value = "{ \"title\": \"The Great Gatsby\", \"author\": \"Craig F. Scott Fitzgerald\", \"publicationYear\": \"2025\",  \"isbn\": \"8124232723125\" }"
+                            )
+                    ))
+    )
     @PostMapping("/add_book")
     public MyAPIResponse<?> addBook(@Valid @RequestBody BookDTO bookDTO) {
         System.out.println("Received Book DTO: " + bookDTO);
@@ -98,11 +95,9 @@ public class BookController {
     @Operation(summary = "Edit a book",description = "Edit a book by its Id")
     @PutMapping("/{id}")
     public MyAPIResponse updateBook(@PathVariable Long id, @RequestBody Book book) {
-        try{
+
         return new MyAPIResponse<>(true,200,bookService.updateBook(id, book));
-        }catch (RuntimeException e){
-            return new MyAPIResponse<>(false,404,"There is no book with id: "+id);
-        }
+
     }
 
     @Operation(summary = "Delete a book",description = "Dlete a book by its Id")

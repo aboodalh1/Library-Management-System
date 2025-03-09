@@ -29,11 +29,11 @@ public class BorrowingController {
     )
     @PostMapping("/{bookId}/patron/{patronId}")
     public ResponseEntity<MyAPIResponse<?>> borrowBook(@PathVariable Long bookId, @PathVariable Long patronId, @Valid @RequestBody NewBorrowingDTO borrowingRecord) {
-
+        try {
         return ResponseEntity.ok(new MyAPIResponse<>(true,200,borrowingService.borrowBook(bookId, patronId,borrowingRecord)));
-
-
-
+        }catch (RuntimeException e){
+            return ResponseEntity.ok(new MyAPIResponse<>(false,404,e.toString()));
+        }
     }
     @Operation(summary = "Return a book",
             description = "Rorrow a book via patron id and book id"

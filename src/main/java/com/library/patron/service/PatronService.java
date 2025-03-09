@@ -4,6 +4,9 @@ import com.library.patron.model.Patron;
 import com.library.patron.repository.PatronRepository;
 import com.library.patron.request.PatronDTO;
 import com.library.patron.response.PatronInfoResponse;
+import com.library.utils.exceptions.NotFoundException;
+import com.library.utils.exceptions.RequestNotValidException;
+import com.library.utils.mapper.ClassMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +27,9 @@ public class PatronService {
     }
 
     public Patron getPatronById(Long id) {
+        if(!patronRepository.existsById(id)){
+            throw new NotFoundException("There is no patron with id = "+id);
+        }
         return patronRepository.findById(id).orElse(null);
     }
 
@@ -32,12 +38,22 @@ public class PatronService {
     }
 
     @Transactional
-    public Patron updatePatron(Long id, Patron updatedPatron) {
+    public PatronInfoResponse updatePatron(Long id, PatronDTO updatedPatron) {
         if (patronRepository.existsById(id)) {
-            updatedPatron.setId(id);
-            return patronRepository.save(updatedPatron);
+            Patron patron = patronRepository.findById(id).orElse(null);
+            Patron existedPhoneNumber = patronRepository.findByPhoneNumberAndIdIsNot(updatedPatron.getPhoneNumber(), id).orElse(null);
+            if (existedPhoneNumber != null) {
+                throw new RequestNotValidException("phone number already taken");
+            }
+            patron.setFirstName(updatedPatron.getFirstName());
+            patron.setLastName(updatedPatron.getLastName());
+            patron.setAddress(updatedPatron.getAddress());
+            patron.setPhoneNumber(patron.getPhoneNumber());
+            patronRepository.saveAndFlush(patron);
+            return ClassMapper.INSTANCE.entityToDto(patron);
+
         }
-        return null;
+        throw new RequestNotValidException("There is no patron with id = "+id);
     }
 
     public boolean deletePatron(Long id) {

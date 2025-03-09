@@ -12,7 +12,23 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Handle validation errors
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<Object> handleInvalidCredentials(InvalidCredentialsException ex) {
+        // Create a custom error response message
+        APIException errorResponse = new APIException("Invalid email or password", HttpStatus.UNAUTHORIZED);
+
+        // Return the response with a 400 Bad Request status code
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Object> handleNotFoundException(NotFoundException ex) {
+        APIException errorResponse = new APIException(ex.getMessage(), HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(errorResponse, errorResponse.getStatus());
+    }
+
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
@@ -31,11 +47,25 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(apiException,unauthorized);
     }
+    @ExceptionHandler(value = {TooManyRequestException.class})
+    public ResponseEntity<Object> handleTooManyRequestException(TooManyRequestException e){
+        HttpStatus tooManyRequests = HttpStatus.TOO_MANY_REQUESTS;
+        APIException apiException = new APIException(
+                e.getMessage(),
+                tooManyRequests
+        );
+        return new ResponseEntity<>(apiException,tooManyRequests);
+    }
 
     // Handle custom exceptions
     @ExceptionHandler(RequestNotValidException.class)
-    public ResponseEntity<String> handleRequestNotValidException(RequestNotValidException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    public ResponseEntity<Object> handleRequestNotValidException(RequestNotValidException ex) {
+        HttpStatus badRequest = HttpStatus.BAD_REQUEST;
+        APIException apiException = new APIException(
+                ex.getMessage(),
+                badRequest
+        );
+        return new ResponseEntity<>(apiException,badRequest);
     }
 
     // Handle generic exceptions
