@@ -36,7 +36,7 @@ public class BookController {
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = MyAPIResponse.class),
                                     examples = @ExampleObject(
-                                            value = "{ \"message\": \"Get all books\", \"status\": \"OK\", \"body\": { \"books\": [ { \"id\": \"1\", \"title\": \"The Great Gatsby\", \"author\": \"Craig F. Scott Fitzgerald\", \"isbn\": \"9780743273565\", \"available\": true, \"publicationYear\": \"2020\" } ] } }"
+                                            value = "{ \"message\": \"Get all books\", \"status\": \"OK\", \"body\": { \"books\": [ { \"id\": \"1\", \"title\": \"The Great Gatsby\", \"author\": \"Craig F. Scott Fitzgerald\", \"isbn\": \"9780743273565\", \"available\": true, \"publicationYear\": \"2020-01-15\" } ] } }"
                                     )
                             )
                     )
@@ -69,13 +69,13 @@ public class BookController {
                             mediaType = "application/json",
                             schema = @Schema(implementation = LibrarianRegisterRequest.class),
                             examples = @ExampleObject(
-                                    value = "{ \"title\": \"The Great Gatsby\", \"author\": \"Craig F. Scott Fitzgerald\", \"publicationYear\": \"2025\",  \"isbn\": \"8124232723125\" }"
+                                    value = "{ \"title\": \"The Great Gatsby\", \"author\": \"Craig F. Scott Fitzgerald\", \"publicationYear\": \"2025-01-25\",  \"isbn\": \"8124232723125\" }"
                             )
                     ))
     )
     @PostMapping("/add_book")
     public MyAPIResponse<?> addBook(@Valid @RequestBody BookDTO bookDTO) {
-        System.out.println(bookDTO.getAuthor()+"dddd");
+
         Book book = new Book();
         book.setTitle(bookDTO.getTitle());
         book.setAuthor(bookDTO.getAuthor());

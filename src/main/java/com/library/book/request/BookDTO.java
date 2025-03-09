@@ -1,8 +1,11 @@
 package com.library.book.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
+import java.time.LocalDate;
 
 public class BookDTO {
 
@@ -14,7 +17,8 @@ public class BookDTO {
     private String author;
 
     @NotNull(message = "Publication year is required")
-    private Integer publicationYear;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate publicationYear;
 
     @NotBlank(message = "ISBN is required")
     private String isbn;
@@ -39,11 +43,11 @@ public class BookDTO {
         this.author = author;
     }
 
-    public Integer getPublicationYear() {
+    public LocalDate getPublicationYear() {
         return publicationYear;
     }
 
-    public void setPublicationYear(@NotNull(message = "Publication year is required") Integer publicationYear) {
+    public void setPublicationYear(@NotNull(message = "Publication year is required") LocalDate publicationYear) {
         this.publicationYear = publicationYear;
     }
 

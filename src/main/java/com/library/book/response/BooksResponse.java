@@ -1,10 +1,13 @@
 package com.library.book.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -17,10 +20,11 @@ public class BooksResponse {
     private String author;
     private String isbn;
     private boolean available;
-    private int publicationYear;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate publicationYear;
 
     // Constructor
-    public BooksResponse(Long id, String title, String author, String isbn, boolean available, int publicationYear) {
+    public BooksResponse(Long id, String title, String author, String isbn, boolean available, LocalDate publicationYear) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -50,7 +54,7 @@ public class BooksResponse {
         return available;
     }
 
-    public int getPublicationYear() {
+    public LocalDate getPublicationYear() {
         return publicationYear;
     }
 }

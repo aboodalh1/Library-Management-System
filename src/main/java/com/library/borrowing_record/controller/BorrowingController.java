@@ -41,11 +41,9 @@ public class BorrowingController {
     )
     @PutMapping("/return/{bookId}/patron/{patronId}")
     public MyAPIResponse<?> returnBook(@PathVariable Long bookId, @PathVariable Long patronId, @Valid @RequestBody EndBorrowinDTO endBorrowinDTO) {
-        try{
+
             return new MyAPIResponse<>(true,200,borrowingService.returnBook(bookId, patronId,endBorrowinDTO));
-        }catch (RuntimeException e){
-            return new MyAPIResponse<>(false,400,e.toString());
-        }
+
     }
 }
 

@@ -2,11 +2,14 @@ package com.library.book.model;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.library.borrowing_record.model.BorrowingRecord;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -20,7 +23,9 @@ public class Book {
     private Long id;
     private String title;
     private String author;
-    private int publicationYear;
+    @NotNull(message = "Publication year is required")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate publicationYear;
     private String isbn;
     @Column(nullable = false)
     private boolean Available = true;
@@ -69,11 +74,11 @@ public class Book {
         this.author = author;
     }
 
-    public int getPublicationYear() {
+    public LocalDate getPublicationYear() {
         return publicationYear;
     }
 
-    public void setPublicationYear(int publicationYear) {
+    public void setPublicationYear(LocalDate publicationYear) {
         this.publicationYear = publicationYear;
     }
 
