@@ -27,7 +27,8 @@ public class SecurityConfiguration {
 
     private static final String[] WHITE_LIST_URL = {
             "/api/v1/librarianAuth/**",
-            "/v2/api-docs",
+            "/api/v1/auth/**"
+,            "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
             "/swagger-resources",
@@ -63,8 +64,7 @@ public class SecurityConfiguration {
                                 .permitAll()
                                 .requestMatchers("api/books/**").authenticated()
                                 .requestMatchers("api/patrons/**").authenticated()
-                                .requestMatchers("api/borrow/**").authenticated()
-                                .requestMatchers("api/return/**").authenticated()
+                                .requestMatchers("/api/borrow/**").authenticated()
                                 .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))

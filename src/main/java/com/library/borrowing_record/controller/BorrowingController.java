@@ -3,15 +3,17 @@ package com.library.borrowing_record.controller;
 import com.library.borrowing_record.request.EndBorrowinDTO;
 import com.library.borrowing_record.request.NewBorrowingDTO;
 import com.library.borrowing_record.service.BorrowingService;
-import com.library.utils.response.ApiResponse;
+import com.library.utils.response.MyAPIResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/borrow")
+@Tag(name = "Borrowing ", description = "Manage borrowing books")
 public class BorrowingController {
 
 
@@ -21,21 +23,28 @@ public class BorrowingController {
         this.borrowingService = borrowingService;
     }
 
+    @Operation(summary = "Borrow a book",
+                description = "Borrow a book via patron id and book id"
+
+    )
     @PostMapping("/{bookId}/patron/{patronId}")
-    public ResponseEntity<ApiResponse<?>> borrowBook(@PathVariable Long bookId, @PathVariable Long patronId, @Valid @RequestBody NewBorrowingDTO borrowingRecord) {
+    public ResponseEntity<MyAPIResponse<?>> borrowBook(@PathVariable Long bookId, @PathVariable Long patronId, @Valid @RequestBody NewBorrowingDTO borrowingRecord) {
         try {
-        return ResponseEntity.ok(new ApiResponse<>(true,200,borrowingService.borrowBook(bookId, patronId,borrowingRecord)));
+        return ResponseEntity.ok(new MyAPIResponse<>(true,200,borrowingService.borrowBook(bookId, patronId,borrowingRecord)));
         }catch (RuntimeException e){
-            return ResponseEntity.ok(new ApiResponse<>(false,404,e.toString()));
+            return ResponseEntity.ok(new MyAPIResponse<>(false,404,e.toString()));
         }
     }
+    @Operation(summary = "Return a book",
+            description = "Rorrow a book via patron id and book id"
 
+    )
     @PutMapping("/return/{bookId}/patron/{patronId}")
-    public ApiResponse<?> returnBook(@PathVariable Long bookId, @PathVariable Long patronId,@Valid @RequestBody EndBorrowinDTO endBorrowinDTO) {
+    public MyAPIResponse<?> returnBook(@PathVariable Long bookId, @PathVariable Long patronId, @Valid @RequestBody EndBorrowinDTO endBorrowinDTO) {
         try{
-            return new ApiResponse<>(true,200,borrowingService.returnBook(bookId, patronId,endBorrowinDTO));
+            return new MyAPIResponse<>(true,200,borrowingService.returnBook(bookId, patronId,endBorrowinDTO));
         }catch (RuntimeException e){
-            return new ApiResponse<>(false,400,e.toString());
+            return new MyAPIResponse<>(false,400,e.toString());
         }
     }
 }

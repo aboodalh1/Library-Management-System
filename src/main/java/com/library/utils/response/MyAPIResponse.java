@@ -1,11 +1,12 @@
 package com.library.utils.response;
 
-public class ApiResponse<T> {
+
+public class MyAPIResponse<T> {
     private boolean message;
     private int statusCode;
     private T data;
 
-    public ApiResponse(boolean message, int statusCode, T data) {
+    public MyAPIResponse(boolean message, int statusCode, T data) {
         this.message = message;
         this.statusCode = statusCode;
         this.data = data;
