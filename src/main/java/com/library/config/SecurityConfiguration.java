@@ -3,6 +3,7 @@ package com.library.config;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -28,7 +29,7 @@ public class SecurityConfiguration {
     private static final String[] WHITE_LIST_URL = {
             "/api/v1/librarianAuth/**",
             "/api/v1/auth/**"
-,            "/v2/api-docs",
+            , "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
             "/swagger-resources",
@@ -40,7 +41,10 @@ public class SecurityConfiguration {
             "/swagger-ui.html"
     };
     private final AuthenticationProvider authenticationProvider;
-
+    @Autowired
+    CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    @Autowired
+    CustomAccessDeniedHandler customAccessDeniedHandler;
     public SecurityConfiguration(JwtAuthenticationFilter jwtAuthFilter, AuthenticationProvider authenticationProvider) {
         this.jwtAuthFilter = jwtAuthFilter;
         this.authenticationProvider = authenticationProvider;
@@ -69,7 +73,11 @@ public class SecurityConfiguration {
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).exceptionHandling(exceptions ->
+                        exceptions
+                                .authenticationEntryPoint(customAuthenticationEntryPoint) // Set custom entry point for unauthenticated users
+                                .accessDeniedHandler(customAccessDeniedHandler)  // Set custom handler for authorization failures
+                )
                 .logout(logout ->
                         logout.logoutUrl("/api/v1/auth/logout")
                                 .addLogoutHandler(logoutHandler())

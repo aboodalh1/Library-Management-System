@@ -3,11 +3,7 @@ package com.library.book.request;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
 public class BookDTO {
 
     @NotBlank(message = "Title is required")
@@ -25,14 +21,6 @@ public class BookDTO {
 
     private boolean available = true;
 
-
-    public BookDTO(String title, String author, Integer publicationYear, String isbn, boolean available) {
-        this.title = title;
-        this.author = author;
-        this.publicationYear = publicationYear;
-        this.isbn = isbn;
-        this.available = available;
-    }
 
 
     public @NotBlank(message = "Title is required") String getTitle() {

@@ -20,7 +20,6 @@ class BorrowingControllerTest {
 
     @Test
     public void testMethod1(){
-        System.out.println("My first test method");
     }
 
 }
