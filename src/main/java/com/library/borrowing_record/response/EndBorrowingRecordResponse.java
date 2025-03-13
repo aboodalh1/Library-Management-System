@@ -7,13 +7,24 @@ import java.time.LocalDate;
 public class EndBorrowingRecordResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate borrowDate;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dueDate;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate returnDate;
+
     private String status;
+
     private Long patronId;
+
     private Long bookId;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate addedDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate ModifiedDate;
 
     public LocalDate getBorrowDate() {
         return borrowDate;

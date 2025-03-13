@@ -12,7 +12,6 @@ public class MyAPIResponse<T> {
         this.data = data;
     }
 
-    // Getters and setters
     public boolean isMessage() {
         return message;
     }

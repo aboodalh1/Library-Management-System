@@ -6,15 +6,20 @@ import com.library.book.model.Book;
 import com.library.borrowing_record.Enum.BorrowingStatus;
 import com.library.patron.model.Patron;
 import jakarta.persistence.*;
+import jakarta.persistence.Id;
 import lombok.*;
+import org.springframework.data.annotation.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class BorrowingRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +42,19 @@ public class BorrowingRecord {
     private LocalDate dueDate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate returnDate;
+
+    @CreatedBy
+    private Long createdBy;
+
+    @LastModifiedBy
+    private Long lastModifiedBy;
+
+    @CreatedDate
+    private LocalDateTime createdDate;
+
+    @LastModifiedDate
+    private LocalDateTime lastModifiedDate;
+
 
     public Long getId() {
         return id;

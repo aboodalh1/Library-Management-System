@@ -24,6 +24,11 @@ public class BorrowingRecordResponse {
     private String status;
     private Long patronId;
     private Long bookId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate addedDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate ModifiedDate;
+
 
     public LocalDate getBorrowDate() {
         return borrowDate;

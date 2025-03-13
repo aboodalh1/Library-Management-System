@@ -2,7 +2,6 @@ package com.library.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +28,7 @@ public class SecurityConfiguration {
     private static final String[] WHITE_LIST_URL = {
             "/api/v1/librarianAuth/**",
             "/api/v1/auth/**"
-            , "/v2/api-docs",
+            ,"/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
             "/swagger-resources",
@@ -41,13 +40,14 @@ public class SecurityConfiguration {
             "/swagger-ui.html"
     };
     private final AuthenticationProvider authenticationProvider;
-    @Autowired
-    CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-    @Autowired
-    CustomAccessDeniedHandler customAccessDeniedHandler;
-    public SecurityConfiguration(JwtAuthenticationFilter jwtAuthFilter, AuthenticationProvider authenticationProvider) {
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+
+    public SecurityConfiguration(JwtAuthenticationFilter jwtAuthFilter, AuthenticationProvider authenticationProvider, CustomAuthenticationEntryPoint customAuthenticationEntryPoint, CustomAccessDeniedHandler customAccessDeniedHandler) {
         this.jwtAuthFilter = jwtAuthFilter;
         this.authenticationProvider = authenticationProvider;
+        this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
     }
 
     @Bean

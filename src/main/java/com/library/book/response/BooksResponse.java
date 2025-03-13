@@ -23,6 +23,7 @@ public class BooksResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate publicationYear;
 
+
     // Constructor
     public BooksResponse(Long id, String title, String author, String isbn, boolean available, LocalDate publicationYear) {
         this.id = id;

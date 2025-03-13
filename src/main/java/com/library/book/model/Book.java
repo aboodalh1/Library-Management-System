@@ -20,14 +20,20 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String title;
+
     private String author;
+
     @NotNull(message = "Publication year is required")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate publicationYear;
+
     private String isbn;
+
     @Column(nullable = false)
     private boolean Available = true;
+
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     @JsonManagedReference
     List<BorrowingRecord> borrowingRecords;

@@ -44,7 +44,6 @@ public class LibrarianService implements UserDetailsService {
     private final RateLimiterConfig rateLimiterConfig;
     private final RateLimiterRegistry rateLimiterRegistry;
 
-    @Autowired
     public LibrarianService(PasswordEncoder passwordEncoder, LibrarianRepository librarianRepository, JwtService jwtService, AuthenticationManager authenticationManager, RateLimiterConfig rateLimiterConfig, RateLimiterRegistry rateLimiterRegistry, ObjectValidator<LibrarianRegisterRequest> registerRequestValidator, ObjectValidator<AuthenticationRequest> authenticationRequestValidator, ObjectValidator<AuthenticationRequest> authenticationRequestObjectValidator) {
         this.passwordEncoder = passwordEncoder;
         this.librarianRepository = librarianRepository;

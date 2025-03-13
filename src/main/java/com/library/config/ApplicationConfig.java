@@ -3,13 +3,12 @@ package com.library.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.library.librarian.repository.LibrarianRepository;
-import com.library.utils.auditing.ApplicationAuditingAware;
+//import com.library.utils.auditing.ApplicationAuditingAware;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -41,10 +40,10 @@ public class ApplicationConfig {
         return objectMapper;
     }
 
-    @Bean
-    public AuditorAware<Long> auditorAware(){
-        return new ApplicationAuditingAware();
-    }
+//    @Bean
+//    public AuditorAware<Long> auditorAware(){
+//        return new ApplicationAuditingAware();
+//    }
 
     @Bean
     public AuthenticationProvider authenticationProvider(){
