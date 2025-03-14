@@ -109,6 +109,6 @@ public class LibrarianAuthController {
     )
     {
         librarianService.changePassword(request , connectedUser);
-        return ResponseEntity.accepted().body("Change password done successfully");
+        return ResponseEntity.ok(new MyAPIResponse<>(true,200,"Change password done successfully"));
     }
 }

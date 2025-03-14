@@ -11,7 +11,6 @@ import com.library.utils.exceptions.TooManyRequestException;
 import com.library.utils.exceptions.InvalidCredentialsException;
 import com.library.utils.exceptions.RequestNotValidException;
 import com.library.utils.mapper.ClassMapper;
-import com.library.utils.validator.ObjectValidator;
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,19 +43,14 @@ public class LibrarianService implements UserDetailsService {
     private final RateLimiterConfig rateLimiterConfig;
     private final RateLimiterRegistry rateLimiterRegistry;
 
-    public LibrarianService(PasswordEncoder passwordEncoder, LibrarianRepository librarianRepository, JwtService jwtService, AuthenticationManager authenticationManager, RateLimiterConfig rateLimiterConfig, RateLimiterRegistry rateLimiterRegistry, ObjectValidator<LibrarianRegisterRequest> registerRequestValidator, ObjectValidator<AuthenticationRequest> authenticationRequestValidator, ObjectValidator<AuthenticationRequest> authenticationRequestObjectValidator) {
+    public LibrarianService(PasswordEncoder passwordEncoder, LibrarianRepository librarianRepository, JwtService jwtService, AuthenticationManager authenticationManager, RateLimiterConfig rateLimiterConfig, RateLimiterRegistry rateLimiterRegistry) {
         this.passwordEncoder = passwordEncoder;
         this.librarianRepository = librarianRepository;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.rateLimiterConfig = rateLimiterConfig;
         this.rateLimiterRegistry = rateLimiterRegistry;
-        this.registerRequestValidator = registerRequestValidator;
-        this.authenticationRequestObjectValidator = authenticationRequestObjectValidator;
     }
-
-    private final ObjectValidator<LibrarianRegisterRequest> registerRequestValidator;
-    private final ObjectValidator<AuthenticationRequest> authenticationRequestObjectValidator;
 
     @Transactional
     public LibrarianAuthResponse librarianRegister(LibrarianRegisterRequest request) {
@@ -95,7 +89,7 @@ public class LibrarianService implements UserDetailsService {
                                 request.getPassword()
                         ));
             } catch (AuthenticationException exception) {
-                throw new InvalidCredentialsException("invalid email or password");
+                throw new InvalidCredentialsException("Invalid email or password");
             }
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -119,8 +113,12 @@ public class LibrarianService implements UserDetailsService {
     @Transactional
     public void changePassword(
             ChangePasswordRequest request, Principal connectedUser){
-
-        var user  = (Librarian) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+        Librarian user;
+        try{
+          user= (Librarian) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+        }catch (Exception e){
+            throw new RequestNotValidException("You need to login first");
+        }
 
         if(!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())){
             throw new RequestNotValidException("Wrong password");
