@@ -18,9 +18,17 @@ public class BorrowingController {
 
 
     private final BorrowingService borrowingService;
-    @Autowired
+
     public BorrowingController(BorrowingService borrowingService) {
         this.borrowingService = borrowingService;
+    }
+
+
+
+    @GetMapping("/getByPatronId/{id}")
+    public ResponseEntity<MyAPIResponse<?>>getBorrowingRecordByPatronId(@PathVariable Long id) {
+
+        return ResponseEntity.ok(new MyAPIResponse<>(true,200,borrowingService.getBorrowingRecordByPatronId(id)));
     }
 
     @Operation(summary = "Borrow a book",
@@ -35,6 +43,14 @@ public class BorrowingController {
 
 
     }
+
+
+
+
+
+
+
+
     @Operation(summary = "Return a book",
             description = "Rorrow a book via patron id and book id"
 

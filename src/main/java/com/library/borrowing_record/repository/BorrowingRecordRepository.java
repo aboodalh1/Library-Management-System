@@ -8,12 +8,13 @@ import com.library.patron.model.Patron;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface BorrowingRecordRepository extends JpaRepository<BorrowingRecord, Long> {
 
     Optional<BorrowingRecord> findBorrowingRecordByBookAndPatronAndReturnDateIsNullAndStatusIs(Book book, Patron patron, BorrowingStatus status);
-
+    List<BorrowingRecord> findBorrowingRecordByPatronId(Long patronId);
 
 }

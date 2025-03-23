@@ -10,6 +10,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -21,13 +23,17 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    public List<Book> getAllBooks() {
+    public List<BooksResponse> getAllBooks() {
         bookRepository.findAll();
         if(bookRepository.findAll().isEmpty()){
             throw new NotFoundException("There is no book yet !");
         }
-        return bookRepository.findAll();
+        return bookRepository.findAll().stream().map(ClassMapper.INSTANCE::entityToDto).collect(Collectors.toList());
 
+    }
+
+    public Optional<List<Book>> searchBookByTitle(String title){
+        return bookRepository.findByTitleContaining(title);
     }
 
 
@@ -36,16 +42,11 @@ public class BookService {
         return bookRepository.findById(id).orElse(null);
     }
 
-    public Book addBook(BookDTO requestBook) {
+    public BooksResponse addBook(BookDTO requestBook) {
 
-        Book book = new Book();
-        book.setTitle(requestBook.getTitle());
-        book.setAuthor(requestBook.getAuthor());
-        book.setPublicationYear(requestBook.getPublicationYear());
-        book.setIsbn(requestBook.getIsbn());
-        book.setAvailable(requestBook.isAvailable());
-
-        return bookRepository.save(book);
+        Book book = ClassMapper.INSTANCE.bookDtoToEntity(requestBook);
+        bookRepository.save(book);
+        return ClassMapper.INSTANCE.entityToDto(book);
     }
 
     @Transactional

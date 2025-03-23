@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -15,19 +16,31 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Schema
 public class BorrowingRecordResponse {
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate borrowDate;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dueDate;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate returnDate;
+
     private String status;
+
     private Long patronId;
+
+    private String patronName;
+
     private Long bookId;
+
+    private String bookTitle;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate addedDate;
+    private LocalDateTime createdDate;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate ModifiedDate;
+    private LocalDateTime lastModifiedDate;
 
 
     public LocalDate getBorrowDate() {
@@ -62,7 +75,6 @@ public class BorrowingRecordResponse {
         this.status = status;
     }
 
-
     public Long getPatronId() {
         return patronId;
     }
@@ -77,5 +89,21 @@ public class BorrowingRecordResponse {
 
     public void setBookId(Long bookId) {
         this.bookId = bookId;
+    }
+
+    public String getPatronName() {
+        return patronName;
+    }
+
+    public void setPatronName(String patronName) {
+        this.patronName = patronName;
+    }
+
+    public String getBookTitle() {
+        return bookTitle;
+    }
+
+    public void setBookTitle(String bookTitle) {
+        this.bookTitle = bookTitle;
     }
 }

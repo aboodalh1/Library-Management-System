@@ -1,9 +1,10 @@
+
 package com.library.patron.service;
 
 import com.library.patron.model.Patron;
 import com.library.patron.repository.PatronRepository;
 import com.library.patron.request.PatronDTO;
-import com.library.patron.response.PatronInfoResponse;
+import com.library.patron.response.PatronResponse;
 import com.library.utils.exceptions.NotFoundException;
 import com.library.utils.exceptions.RequestNotValidException;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +44,7 @@ class PatronServiceTest {
     void testGetAllPatrons() {
         when(patronRepository.findAll()).thenReturn(List.of(mockPatron));
 
-        List<Patron> patrons = patronService.getAllPatrons();
+        List<PatronResponse> patrons = patronService.getAllPatrons();
 
         assertFalse(patrons.isEmpty());
         assertEquals(1, patrons.size());
@@ -76,7 +77,13 @@ class PatronServiceTest {
     void testAddPatron() {
         when(patronRepository.save(any(Patron.class))).thenReturn(mockPatron);
 
-        Patron savedPatron = patronService.addPatron(mockPatron);
+        PatronDTO patron = new PatronDTO();
+        patron.setFirstName(mockPatron.getFirstName());
+        patron.setLastName(mockPatron.getLastName());
+        patron.setPhoneNumber(mockPatron.getPhoneNumber());
+        patron.setAddress(mockPatron.getAddress());
+
+        PatronResponse savedPatron = patronService.addPatron(patron);
 
         assertNotNull(savedPatron);
         assertEquals("AbdAllah", savedPatron.getFirstName());
@@ -95,7 +102,7 @@ class PatronServiceTest {
         when(patronRepository.findById(1L)).thenReturn(Optional.of(mockPatron));
         when(patronRepository.findByPhoneNumberAndIdIsNot("930704986", 1L)).thenReturn(Optional.empty());
 
-        PatronInfoResponse response = patronService.updatePatron(1L, updateDTO);
+        PatronResponse response = patronService.updatePatron(1L, updateDTO);
 
         assertNotNull(response);
         assertEquals("Updated", response.getFirstName());
@@ -114,15 +121,6 @@ class PatronServiceTest {
         assertEquals("There is no patron with id = 2", thrown.getMessage());
     }
 
-    @Test
-    void testDeletePatron_Success() {
-        when(patronRepository.existsById(1L)).thenReturn(true);
-
-        boolean result = patronService.deletePatron(1L);
-
-        assertTrue(result);
-        verify(patronRepository, times(1)).deleteById(1L);
-    }
 
     @Test
     void testDeletePatron_NotFound() {

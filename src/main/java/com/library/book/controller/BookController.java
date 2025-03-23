@@ -2,6 +2,7 @@ package com.library.book.controller;
 
 import com.library.book.model.Book;
 import com.library.book.request.BookDTO;
+import com.library.book.response.BooksResponse;
 import com.library.book.service.BookService;
 import com.library.librarian.request.LibrarianRegisterRequest;
 import com.library.utils.response.MyAPIResponse;
@@ -15,6 +16,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/api/books")
@@ -44,8 +47,32 @@ public class BookController {
     )
 
     @GetMapping
-    public ResponseEntity<MyAPIResponse<List<Book>>> getAllBooks() {
-        List<Book> books = bookService.getAllBooks();
+    public ResponseEntity<MyAPIResponse<List<BooksResponse>>> getAllBooks() {
+        List<BooksResponse> books = bookService.getAllBooks();
+        return ResponseEntity.ok(new MyAPIResponse<>(true, 200 , books));
+    }
+
+    @Operation(
+            summary = "Search for Book",
+            description = "Retrieve books as its title.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Successfully retrieved books",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = MyAPIResponse.class),
+                                    examples = @ExampleObject(
+                                            value = "{ \"message\": \"Get all books\", \"status\": \"OK\", \"body\": { \"books\": [ { \"id\": \"1\", \"title\": \"The Great Gatsby\", \"author\": \"Craig F. Scott Fitzgerald\", \"isbn\": \"9780743273565\", \"available\": true, \"publicationYear\": \"2020-01-15\" } ] } }"
+                                    )
+                            )
+                    )
+            }
+    )
+
+    @GetMapping("/search/{title}")
+    public ResponseEntity<MyAPIResponse<Optional<List<Book>>>> searchBooksByTitle(@PathVariable String title) {
+        Optional<List<Book>> books = bookService.searchBookByTitle(title);
         return ResponseEntity.ok(new MyAPIResponse<>(true, 200 , books));
     }
 
@@ -73,7 +100,7 @@ public class BookController {
     @PostMapping("/add_book")
     public MyAPIResponse<?> addBook(@Valid @RequestBody BookDTO request) {
 
-        Book savedBook = bookService.addBook(request);
+        BooksResponse savedBook = bookService.addBook(request);
         return new MyAPIResponse<>(true, 200, savedBook);
     }
 

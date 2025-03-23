@@ -42,7 +42,7 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
 
         PasswordValidator validator = new PasswordValidator(resolver, Arrays.asList(
 
-                // length between 8 and 16 characters
+                // length between 8 and 61 characters
 
         new LengthRule(8, 61),
 

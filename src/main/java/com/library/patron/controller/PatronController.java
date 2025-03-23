@@ -1,7 +1,7 @@
 package com.library.patron.controller;
 import com.library.patron.model.Patron;
 import com.library.patron.request.PatronDTO;
-import com.library.patron.response.PatronInfoResponse;
+import com.library.patron.response.PatronResponse;
 import com.library.patron.service.PatronService;
 import com.library.utils.response.MyAPIResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +26,7 @@ public class PatronController {
             summary = "Get All Patrons"
     )
     @GetMapping
-    public MyAPIResponse<List<Patron>> getAllPatrons() {
+    public MyAPIResponse<List<PatronResponse>> getAllPatrons() {
 
         return new MyAPIResponse<>(true,200, patronService.getAllPatrons());
     }
@@ -43,24 +43,16 @@ public class PatronController {
             summary = "Add a new Patron"
     )
     @PostMapping("/add_patron")
-    public ResponseEntity<MyAPIResponse<Patron>> addPatron(@Valid @RequestBody PatronDTO patronDTO) {
-        Patron patron = new Patron();
-
-        patron.setFirstName(patronDTO.getFirstName());
-        patron.setLastName(patronDTO.getLastName());
-        patron.setAddress(patronDTO.getAddress());
-        patron.setPhoneNumber(patronDTO.getPhoneNumber());
-
-        Patron savedPatron = patronService.addPatron(patron);
-
-        return ResponseEntity.ok(new MyAPIResponse<>(true,200,patronService.addPatron(savedPatron)));
+    public ResponseEntity<MyAPIResponse<PatronResponse>> addPatron(@Valid @RequestBody PatronDTO patronDTO) {
+        PatronResponse savedPatron = patronService.addPatron(patronDTO);
+        return ResponseEntity.ok(new MyAPIResponse<>(true,200,savedPatron));
     }
     @Operation(
             summary = "Edit Patron",
             description = "Edit Patron by its Id"
     )
     @PutMapping("/{id}")
-    public MyAPIResponse<PatronInfoResponse> updatePatron(@PathVariable Long id, @Valid @RequestBody PatronDTO patron) {
+    public MyAPIResponse<PatronResponse> updatePatron(@PathVariable Long id, @Valid @RequestBody PatronDTO patron) {
         return new MyAPIResponse<>(true,200,patronService.updatePatron(id, patron));
     }
     @Operation(

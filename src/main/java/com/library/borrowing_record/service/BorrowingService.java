@@ -13,8 +13,9 @@ import com.library.patron.repository.PatronRepository;
 import com.library.utils.exceptions.RequestNotValidException;
 import com.library.utils.mapper.ClassMapper;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
+
 
 
 @Service
@@ -24,12 +25,23 @@ public class BorrowingService {
     private final BookRepository bookRepository;
     private final PatronRepository patronRepository;
 
-    @Autowired
     public BorrowingService(BorrowingRecordRepository borrowingRecordRepository, BookRepository bookRepository, PatronRepository patronRepository) {
         this.borrowingRecordRepository = borrowingRecordRepository;
         this.bookRepository = bookRepository;
         this.patronRepository = patronRepository;
     }
+
+
+    public List<BorrowingRecord> getBorrowingRecordByPatronId(Long id) {
+        Patron patron = patronRepository.findById(id).orElseThrow(
+                ()-> new RequestNotValidException("There is no patron with this id: " + id)
+        );
+
+        return borrowingRecordRepository.findBorrowingRecordByPatronId(patron.getId());
+    }
+
+
+
     @Transactional
     public BorrowingRecordResponse borrowBook(Long bookId, Long patronId, NewBorrowingDTO request) {
         Book demandedBook = bookRepository.findById(bookId).orElseThrow(
@@ -53,6 +65,8 @@ public class BorrowingService {
         BorrowingRecordResponse response = ClassMapper.INSTANCE.entityToDto(borrowingRecord);
         response.setBookId(borrowingRecord.getBook().getId());
         response.setPatronId(borrowingRecord.getPatron().getId());
+        response.setBookTitle(borrowingRecord.getBook().getTitle());
+        response.setPatronName(borrowingRecord.getPatron().getFirstName()+" "+borrowingRecord.getPatron().getLastName());
         return response;
     }
     @Transactional

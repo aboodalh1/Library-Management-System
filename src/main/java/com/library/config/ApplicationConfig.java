@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableCaching
+
 public class ApplicationConfig {
     private final  LibrarianRepository librarianRepository;
 

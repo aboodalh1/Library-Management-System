@@ -5,15 +5,15 @@ import com.library.borrowing_record.model.BorrowingRecord;
 import com.library.patron.model.Patron;
 import com.library.patron.repository.PatronRepository;
 import com.library.patron.request.PatronDTO;
-import com.library.patron.response.PatronInfoResponse;
+import com.library.patron.response.PatronResponse;
 import com.library.utils.exceptions.NotFoundException;
 import com.library.utils.exceptions.RequestNotValidException;
 import com.library.utils.mapper.ClassMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,8 +25,8 @@ public class PatronService {
         this.patronRepository = patronRepository;
     }
 
-    public List<Patron> getAllPatrons() {
-        return patronRepository.findAll();
+    public List<PatronResponse> getAllPatrons() {
+        return patronRepository.findAll().stream().map(ClassMapper.INSTANCE::pentityToDto).collect(Collectors.toList());
     }
 
     public Patron getPatronById(Long id) {
@@ -36,12 +36,14 @@ public class PatronService {
         return patronRepository.findById(id).orElse(null);
     }
 
-    public Patron addPatron(Patron patron) {
-        return patronRepository.save(patron);
+    public PatronResponse addPatron(PatronDTO request) {
+        Patron patron = ClassMapper.INSTANCE.patronDtoToEntity(request);
+         patronRepository.save(patron);
+         return ClassMapper.INSTANCE.pentityToDto(patron);
     }
 
     @Transactional
-    public PatronInfoResponse updatePatron(Long id, PatronDTO updatedPatron) {
+    public PatronResponse updatePatron(Long id, PatronDTO updatedPatron) {
         if (patronRepository.existsById(id)) {
             Patron patron = patronRepository.findById(id).orElse(null);
             Patron existedPhoneNumber = patronRepository.findByPhoneNumberAndIdIsNot(updatedPatron.getPhoneNumber(), id).orElse(null);
@@ -53,7 +55,7 @@ public class PatronService {
             patron.setAddress(updatedPatron.getAddress());
             patron.setPhoneNumber(patron.getPhoneNumber());
             patronRepository.saveAndFlush(patron);
-            return ClassMapper.INSTANCE.entityToDto(patron);
+            return ClassMapper.INSTANCE.pentityToDto(patron);
         }
         throw new RequestNotValidException("There is no patron with id = " + id);
     }

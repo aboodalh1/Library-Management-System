@@ -19,7 +19,7 @@ public class PatronDTO {
     private String lastName;
 
     @NotBlank(message = "Phone number is required")
-    @Pattern(regexp = "\\d{10,15}", message = "Phone number must be between 10-15 digits")
+    @Pattern(regexp = "\\d{10,16}", message = "Phone number must be between 10-15 digits")
     private String phoneNumber;
 
     @NotBlank(message = "Address is required")
