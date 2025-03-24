@@ -8,6 +8,7 @@ import com.library.borrowing_record.repository.BorrowingRecordRepository;
 import com.library.borrowing_record.request.EndBorrowinDTO;
 import com.library.borrowing_record.request.NewBorrowingDTO;
 import com.library.borrowing_record.response.BorrowingRecordResponse;
+import com.library.borrowing_record.response.EndBorrowingRecordResponse;
 import com.library.patron.model.Patron;
 import com.library.patron.repository.PatronRepository;
 import com.library.utils.exceptions.RequestNotValidException;
@@ -122,7 +123,7 @@ class BorrowingServiceTest {
         when(borrowingRecordRepository.findBorrowingRecordByBookAndPatronAndReturnDateIsNullAndStatusIs(book, patron, BorrowingStatus.Borrowed))
                 .thenReturn(Optional.of(borrowingRecord));
 
-        BorrowingRecordResponse response = borrowingService.returnBook(1L, 1L, request);
+        EndBorrowingRecordResponse response = borrowingService.returnBook(1L, 1L, request);
 
         assertNotNull(response);
         assertEquals(BorrowingStatus.Returned, borrowingRecord.getStatus());

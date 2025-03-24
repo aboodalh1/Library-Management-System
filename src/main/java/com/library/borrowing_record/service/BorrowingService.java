@@ -8,6 +8,7 @@ import com.library.borrowing_record.repository.BorrowingRecordRepository;
 import com.library.borrowing_record.request.EndBorrowinDTO;
 import com.library.borrowing_record.request.NewBorrowingDTO;
 import com.library.borrowing_record.response.BorrowingRecordResponse;
+import com.library.borrowing_record.response.EndBorrowingRecordResponse;
 import com.library.patron.model.Patron;
 import com.library.patron.repository.PatronRepository;
 import com.library.utils.exceptions.RequestNotValidException;
@@ -58,19 +59,19 @@ public class BorrowingService {
         }
         BorrowingRecord borrowingRecord = ClassMapper.INSTANCE.borrowingRecordDtoToEntity(request);
         borrowingRecord.setStatus(BorrowingStatus.Borrowed);
-        borrowingRecord.setPatron(patron);
         borrowingRecord.setBook(demandedBook);
+        borrowingRecord.setPatron(patron);
         borrowingRecord.getBook().setAvailable(false);
         borrowingRecordRepository.save(borrowingRecord);
         BorrowingRecordResponse response = ClassMapper.INSTANCE.entityToDto(borrowingRecord);
         response.setBookId(borrowingRecord.getBook().getId());
         response.setPatronId(borrowingRecord.getPatron().getId());
-        response.setBookTitle(borrowingRecord.getBook().getTitle());
-        response.setPatronName(borrowingRecord.getPatron().getFirstName()+" "+borrowingRecord.getPatron().getLastName());
+        response.setCreatedDate(borrowingRecord.getCreatedDate());
+        response.setLastModifiedDate(borrowingRecord.getLastModifiedDate());
         return response;
     }
     @Transactional
-    public BorrowingRecordResponse returnBook(Long bookId, Long patronId, EndBorrowinDTO endBorrowinDTO) {
+    public EndBorrowingRecordResponse returnBook(Long bookId, Long patronId, EndBorrowinDTO endBorrowinDTO) {
         Book demandedBook = bookRepository.findById(bookId).orElseThrow(
                 ()-> new RequestNotValidException("There is no book with this id: " + bookId)
         );
@@ -95,9 +96,11 @@ public class BorrowingService {
         borrowingRecord.setReturnDate(endBorrowinDTO.getReturnDate());
         demandedBook.setAvailable(true);
         borrowingRecordRepository.save(borrowingRecord);
-        BorrowingRecordResponse response = ClassMapper.INSTANCE.entityToDto(borrowingRecord);
+        EndBorrowingRecordResponse response = ClassMapper.INSTANCE.endBorrowEntityToDto(borrowingRecord);
         response.setBookId(borrowingRecord.getBook().getId());
         response.setPatronId(borrowingRecord.getPatron().getId());
+        response.setCreatedDate(borrowingRecord.getCreatedDate());
+        response.setLastModifiedDate(borrowingRecord.getLastModifiedDate());
         return response;
     }
 

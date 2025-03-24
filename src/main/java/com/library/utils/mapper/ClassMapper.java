@@ -12,6 +12,7 @@ import com.library.borrowing_record.request.NewBorrowingDTO;
 
 import com.library.borrowing_record.response.BorrowingRecordResponse;
 
+import com.library.borrowing_record.response.EndBorrowingRecordResponse;
 import com.library.librarian.model.Librarian;
 
 import com.library.librarian.request.LibrarianRegisterRequest;
@@ -41,12 +42,14 @@ public interface ClassMapper {
 
     BorrowingRecordResponse entityToDto(BorrowingRecord borrowingRecord);
 
+    EndBorrowingRecordResponse endBorrowEntityToDto(BorrowingRecord borrowingRecord);
+
     Book bookDtoToEntity(BookDTO request);
 
     Patron patronDtoToEntity(PatronDTO request);
 
     Librarian librarianDtoToEntity(LibrarianRegisterRequest request);
-    //    @Mapping(source = "borrowDate" , target = "borrowDate")
+
     BorrowingRecord borrowingRecordDtoToEntity(NewBorrowingDTO request);
 
 
