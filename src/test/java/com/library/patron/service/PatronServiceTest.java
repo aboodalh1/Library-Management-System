@@ -1,6 +1,4 @@
-
 package com.library.patron.service;
-
 import com.library.patron.model.Patron;
 import com.library.patron.repository.PatronRepository;
 import com.library.patron.request.PatronDTO;
@@ -15,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -76,15 +73,12 @@ class PatronServiceTest {
     @Test
     void testAddPatron() {
         when(patronRepository.save(any(Patron.class))).thenReturn(mockPatron);
-
         PatronDTO patron = new PatronDTO();
         patron.setFirstName(mockPatron.getFirstName());
         patron.setLastName(mockPatron.getLastName());
         patron.setPhoneNumber(mockPatron.getPhoneNumber());
         patron.setAddress(mockPatron.getAddress());
-
         PatronResponse savedPatron = patronService.addPatron(patron);
-
         assertNotNull(savedPatron);
         assertEquals("AbdAllah", savedPatron.getFirstName());
         verify(patronRepository, times(1)).save(mockPatron);

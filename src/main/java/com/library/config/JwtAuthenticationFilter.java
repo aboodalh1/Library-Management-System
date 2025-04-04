@@ -46,13 +46,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
+        if(request.getRequestURL().toString().contains("librarianAuth") && !request.getRequestURL().toString().contains("change-password")){
+            System.out.println(request.getRequestURL().toString());
+            filterChain.doFilter(request,response);
+            return;
+        }
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
             filterChain.doFilter(request,response);
             return;
         }
         jwt = authHeader.substring(7);
         try{
-        userEmail = jwtService.extractUsername(jwt); //todo extract the userEmail from JWT token
+        userEmail = jwtService.extractUsername(jwt);
         if(userEmail != null && SecurityContextHolder.getContext().getAuthentication()==null){
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
             if(jwtService.isTokenValid(jwt,userDetails)){

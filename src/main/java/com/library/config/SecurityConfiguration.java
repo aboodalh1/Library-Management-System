@@ -2,7 +2,6 @@ package com.library.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -27,8 +26,7 @@ public class SecurityConfiguration {
 
     private static final String[] WHITE_LIST_URL = {
             "/api/v1/librarianAuth/**",
-            "/api/v1/auth/**"
-            ,"/v2/api-docs",
+            "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
             "/swagger-resources",
@@ -69,7 +67,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("api/books/**").authenticated()
                                 .requestMatchers("api/patrons/**").authenticated()
                                 .requestMatchers("/api/borrow/**").authenticated()
-                                .anyRequest().permitAll()
+                                .anyRequest().denyAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)

@@ -7,11 +7,12 @@ import com.library.book.respository.BookRepository;
 import com.library.utils.exceptions.NotFoundException;
 import com.library.utils.mapper.ClassMapper;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -23,17 +24,15 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    public List<BooksResponse> getAllBooks() {
+    public Page<Book> getAllBooks(int page, int size) {
         bookRepository.findAll();
-        if(bookRepository.findAll().isEmpty()){
-            throw new NotFoundException("There is no book yet !");
-        }
-        return bookRepository.findAll().stream().map(ClassMapper.INSTANCE::entityToDto).collect(Collectors.toList());
-
+        Pageable pageable = PageRequest.of(page, size);
+        return bookRepository.findAll(pageable);
     }
 
-    public Optional<List<Book>> searchBookByTitle(String title){
-        return bookRepository.findByTitleContaining(title);
+    public List<Book> searchBookByTitle(String title){
+        System.out.println(title);
+        return bookRepository.findByTitleContainingIgnoreCase(title);
     }
 
 

@@ -26,10 +26,9 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     <S extends Book> S saveAndFlush(S entity);
 
-
     void deleteById(Long id);
 
-    Optional<List<Book>> findByTitleContaining(String title);
+    List<Book> findByTitleContainingIgnoreCase(String title);
 
 
 }

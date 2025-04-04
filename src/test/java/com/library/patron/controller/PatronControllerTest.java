@@ -1,130 +1,80 @@
-//package com.library.patron.controller;
-//
-//import com.library.patron.model.Patron;
-//import com.library.patron.request.PatronDTO;
-//import com.library.patron.response.PatronResponse;
-//import com.library.patron.service.PatronService;
-//import com.library.utils.response.MyAPIResponse;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.MockitoAnnotations;
-//import org.springframework.http.ResponseEntity;
-//
-//import static org.mockito.Mockito.*;
-//import static org.junit.jupiter.api.Assertions.*;
-//
-//import java.util.Collections;
-//import java.util.List;
-//
-//class PatronControllerTest {
-//
-//    @InjectMocks
-//    private PatronController patronController;
-//
-//    @Mock
-//    private PatronService patronService;
-//
-//    private Patron patron;
-//    private PatronDTO patronDTO;
-//
-//    @BeforeEach
-//    void setUp() {
-//        MockitoAnnotations.openMocks(this);
-//
-//        // Mock data setup
-//        patron = new Patron();
-//        patron.setId(1L);
-//        patron.setFirstName("Abd");
-//        patron.setLastName("Alharisi");
-//        patron.setAddress("Damascus");
-//        patron.setPhoneNumber("930704986");
-//
-//        patronDTO = new PatronDTO();
-//        patronDTO.setFirstName("Abd");
-//        patronDTO.setLastName("Alharisi");
-//        patronDTO.setAddress("Damascus");
-//        patronDTO.setPhoneNumber("930704986");
-//    }
-//
-//    @Test
-//    void testGetAllPatrons() {
-//        // Setup
-//        when(patronService.getAllPatrons()).thenReturn(Collections.singletonList(patron));
-//
-//        // Execute
-//        MyAPIResponse<List<Patron>> response = patronController.getAllPatrons();
-//
-//        // Verify
-//        assertNotNull(response);
-//        assertTrue(response.getStatusCode()==200);
-//        assertEquals(200, response.getStatusCode());
-//        assertEquals(1, response.getData().size());
-//        assertEquals("Abd", response.getData().get(0).getFirstName());
-//    }
-//
-//    @Test
-//    void testAddPatron() {
-//        // Setup
-//        when(patronService.addPatron(any(Patron.class))).thenReturn(patron);
-//
-//        // Execute
-//        ResponseEntity<MyAPIResponse<Patron>> responseEntity = patronController.addPatron(patronDTO);
-//
-//        // Verify
-//        assertNotNull(responseEntity);
-//        assertEquals(200, responseEntity.getStatusCodeValue());
-//        assertTrue(responseEntity.getBody().getStatusCode()==200);
-//        assertEquals("Abd", responseEntity.getBody().getData().getFirstName());
-//    }
-//
-//    @Test
-//    void testUpdatePatron() {
-//        // Setup
-//        PatronResponse patronResponse = new PatronResponse();
-//        patronResponse.setFirstName("Abd");
-//        patronResponse.setLastName("Alharisi");
-//
-//        when(patronService.updatePatron(eq(1L), any(PatronDTO.class))).thenReturn(patronResponse);
-//
-//        // Execute
-//        MyAPIResponse<PatronResponse> response = patronController.updatePatron(1L, patronDTO);
-//
-//        // Verify
-//        assertNotNull(response);
-//        assertTrue(response.getStatusCode()==200);
-//        assertEquals(200, response.getStatusCode());
-//        assertEquals("Abd", response.getData().getFirstName());
-//    }
-//
-//    @Test
-//    void testDeletePatronSuccess() {
-//        // Setup
-//        when(patronService.deletePatron(1L)).thenReturn(true);
-//
-//        // Execute
-//        MyAPIResponse<String> response = patronController.deletePatron(1L);
-//
-//        // Verify
-//        assertNotNull(response);
-//        assertTrue(response.getStatusCode()==200);
-//        assertEquals(200, response.getStatusCode());
-//        assertEquals("Patron deleted Successfully", response.getData());
-//    }
-//
-//    @Test
-//    void testDeletePatronNotFound() {
-//        // Setup
-//        when(patronService.deletePatron(1L)).thenReturn(false);
-//
-//        // Execute
-//        MyAPIResponse<String> response = patronController.deletePatron(1L);
-//
-//        // Verify
-//        assertNotNull(response);
-//        assertFalse(response.getStatusCode()==200);
-//        assertEquals(404, response.getStatusCode());
-//        assertEquals("There is no patron with id: 1", response.getData());
-//    }
-//}
+package com.library.patron.controller;
+
+import com.library.patron.model.Patron;
+import com.library.patron.request.PatronDTO;
+import com.library.patron.response.PatronResponse;
+import com.library.patron.service.PatronService;
+import com.library.utils.response.MyAPIResponse;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+public class PatronControllerTest {
+
+    @Mock
+    private PatronService patronService;
+
+    @InjectMocks
+    private PatronController patronController;
+
+    private MockMvc mockMvc;
+
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(patronController).build();
+    }
+
+    @Test
+    void testGetAllPatrons() throws Exception {
+        PatronResponse patronResponse = new PatronResponse(1L, "John", "Doe", "1234567890", "123 Main St");
+        Mockito.when(patronService.getAllPatrons()).thenReturn(List.of(patronResponse));
+
+        mockMvc.perform(get("/api/patrons"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[0].firstName").value("John"));
+    }
+
+    @Test
+    void testGetPatronById() throws Exception {
+        Patron patron = new Patron();
+        patron.setId(1L);
+        patron.setFirstName("John");
+        patron.setLastName("Doe");
+
+        Mockito.when(patronService.getPatronById(1L)).thenReturn(patron);
+
+        mockMvc.perform(get("/api/patrons/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.firstName").value("John"));
+    }
+
+    @Test
+    void testAddPatron() throws Exception {
+        PatronDTO patronDTO = new PatronDTO();
+        patronDTO.setFirstName("Jane");
+        patronDTO.setLastName("Smith");
+        patronDTO.setPhoneNumber("9876543210");
+        patronDTO.setAddress("456 Elm St");
+
+        PatronResponse patronResponse = new PatronResponse(2L, "Jane", "Smith", "9876543210", "456 Elm St");
+
+        Mockito.when(patronService.addPatron(Mockito.any(PatronDTO.class))).thenReturn(patronResponse);
+
+        mockMvc.perform(post("/api/patrons/add_patron")
+                        .contentType("application/json")
+                        .content("{\"firstName\":\"Jane\", \"lastName\":\"Smith\", \"phoneNumber\":\"9876543210\", \"address\":\"456 Elm St\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.firstName").value("Jane"));
+    }
+}

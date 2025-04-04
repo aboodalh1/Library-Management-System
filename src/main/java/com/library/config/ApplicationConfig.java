@@ -3,7 +3,6 @@ package com.library.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.library.librarian.repository.LibrarianRepository;
-//import com.library.utils.auditing.ApplicationAuditingAware;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
@@ -21,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableCaching
-
 public class ApplicationConfig {
     private final  LibrarianRepository librarianRepository;
 
@@ -41,10 +39,6 @@ public class ApplicationConfig {
         return objectMapper;
     }
 
-//    @Bean
-//    public AuditorAware<Long> auditorAware(){
-//        return new ApplicationAuditingAware();
-//    }
 
     @Bean
     public AuthenticationProvider authenticationProvider(){

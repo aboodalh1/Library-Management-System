@@ -1,5 +1,4 @@
 package com.library.book.controller;
-
 import com.library.book.model.Book;
 import com.library.book.request.BookDTO;
 import com.library.book.response.BooksResponse;
@@ -13,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -47,8 +47,11 @@ public class BookController {
     )
 
     @GetMapping
-    public ResponseEntity<MyAPIResponse<List<BooksResponse>>> getAllBooks() {
-        List<BooksResponse> books = bookService.getAllBooks();
+    public ResponseEntity<MyAPIResponse<Page<Book>>> getAllBooks( @RequestParam(defaultValue = "0") int page,
+                                                                           @RequestParam(defaultValue = "5") int size) {
+        Page<Book> books = bookService.getAllBooks(
+                page,size
+        );
         return ResponseEntity.ok(new MyAPIResponse<>(true, 200 , books));
     }
 
@@ -71,8 +74,9 @@ public class BookController {
     )
 
     @GetMapping("/search/{title}")
-    public ResponseEntity<MyAPIResponse<Optional<List<Book>>>> searchBooksByTitle(@PathVariable String title) {
-        Optional<List<Book>> books = bookService.searchBookByTitle(title);
+    public ResponseEntity<MyAPIResponse<List<Book>>> searchBooksByTitle(@PathVariable String title) {
+        List<Book> books = bookService.searchBookByTitle(title);
+        System.out.println(books);
         return ResponseEntity.ok(new MyAPIResponse<>(true, 200 , books));
     }
 
