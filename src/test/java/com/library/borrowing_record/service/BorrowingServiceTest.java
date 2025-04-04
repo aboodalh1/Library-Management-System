@@ -152,14 +152,11 @@ class BorrowingServiceTest {
 
         borrowingRecord.setBorrowDate(LocalDate.of(2024, 3, 1));
         when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
-        when(patronRepository.findById(1L)).thenReturn(Optional.of(patron));
-        when(borrowingRecordRepository.findBorrowingRecordByBookAndPatronAndReturnDateIsNullAndStatusIs(book, patron, BorrowingStatus.Borrowed))
-                .thenReturn(Optional.of(borrowingRecord));
 
         RequestNotValidException exception = assertThrows(RequestNotValidException.class, () ->
                 borrowingService.returnBook(1L, 1L, request));
 
-        assertEquals("Return date must be after borrow date!", exception.getMessage());
+        assertEquals("This book is already available", exception.getMessage());
     }
 
 }

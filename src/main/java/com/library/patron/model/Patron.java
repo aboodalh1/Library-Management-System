@@ -22,6 +22,16 @@ public class Patron {
     @JsonManagedReference
     private List<BorrowingRecord> borrowingRecords;
 
+    public Patron( String firstName, String lastName, String phoneNumber, String address) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+    }
+
+    public Patron() {
+    }
+
     public void setId(Long id) {
         this.id = id;
     }

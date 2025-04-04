@@ -26,6 +26,16 @@ public class PatronDTO {
     @Size(max = 255, message = "Address must be at most 255 characters")
     private String address;
 
+    public PatronDTO(String firstName, String lastName, String phoneNumber, String address) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+    }
+
+    public PatronDTO() {
+    }
+
 
     public @NotBlank(message = "First name is required") @Size(max = 50, message = "First name must be at most 50 characters") String getFirstName() {
         return firstName;

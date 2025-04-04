@@ -32,12 +32,7 @@ public class ApplicationConfig {
         return email -> librarianRepository.findByEmail(email)
                 .orElseThrow(()-> new UsernameNotFoundException("User not found"));
     }
-    @Bean
-    public ObjectMapper objectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        return objectMapper;
-    }
+
 
 
     @Bean

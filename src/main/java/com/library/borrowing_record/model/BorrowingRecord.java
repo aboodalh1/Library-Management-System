@@ -41,11 +41,6 @@ public class BorrowingRecord {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate returnDate;
 
-    @CreatedBy
-    private Long createdBy;
-
-    @LastModifiedBy
-    private Long lastModifiedBy;
 
     @CreatedDate
     private LocalDateTime createdDate;
@@ -53,21 +48,6 @@ public class BorrowingRecord {
     @LastModifiedDate
     private LocalDateTime lastModifiedDate;
 
-    public Long getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(Long createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Long getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(Long lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
 
     public LocalDateTime getCreatedDate() {
         return createdDate;

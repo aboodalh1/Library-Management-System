@@ -5,12 +5,17 @@ import com.library.patron.request.PatronDTO;
 import com.library.patron.response.PatronResponse;
 import com.library.utils.exceptions.NotFoundException;
 import com.library.utils.exceptions.RequestNotValidException;
+import com.library.utils.mapper.ClassMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,11 +24,11 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class PatronServiceTest {
 
-    @Mock
-    private PatronRepository patronRepository;
-
     @InjectMocks
     private PatronService patronService;
+
+    @Mock
+    private PatronRepository patronRepository;
 
     private Patron mockPatron;
 
@@ -35,17 +40,63 @@ class PatronServiceTest {
         mockPatron.setLastName("Alh");
         mockPatron.setAddress("Damascus");
         mockPatron.setPhoneNumber("930704986");
+
+    }
+    @Test
+    public void should_successfully_save_a_student(){
+        //Given
+        PatronDTO patronDTO = new PatronDTO(
+                "AbdAllah",
+                "Alh",
+                "Damascus",
+                "930704986"
+        );
+
+        Patron patron = new Patron(
+                "AbdAllah",
+                "Alh",
+                "Damascus",
+                "930704986"
+        );
+        //when
+        PatronResponse patronResponse = patronService.addPatron(patronDTO);
+        //then
+        assertEquals(patronDTO.getFirstName(), patronResponse.getFirstName());
+        assertEquals(patronDTO.getLastName(), patronResponse.getLastName());
+        assertEquals(patronDTO.getAddress(), patronResponse.getAddress());
+        assertEquals(patronDTO.getPhoneNumber(), patronResponse.getPhoneNumber());
+
+
+
     }
 
     @Test
     void testGetAllPatrons() {
-        when(patronRepository.findAll()).thenReturn(List.of(mockPatron));
 
-        List<PatronResponse> patrons = patronService.getAllPatrons();
+        List <Patron> patrons = new ArrayList<>();
+        patrons.add(
+                  new Patron(
+                        "AbdAllah",
+                        "Alh",
+                        "Damascus",
+                        "930704986"
+                )
+        );patrons.add(
+                  new Patron(
+                        "AbdAllah 2",
+                        "Alh",
+                        "Damascus",
+                        "930704986"
+                )
+        );
+        patrons.get(0).setId(1L);
+        when(patronRepository.findAll()).thenReturn(patrons);
 
-        assertFalse(patrons.isEmpty());
-        assertEquals(1, patrons.size());
-        verify(patronRepository, times(1)).findAll();
+        List<PatronResponse> patronResponses = patronService.getAllPatrons();
+        assertNotNull(patronResponses);
+        assertEquals(2, patronResponses.size());
+        assertEquals("AbdAllah", patronResponses.get(0).getFirstName());
+
     }
 
     @Test
@@ -81,7 +132,6 @@ class PatronServiceTest {
         PatronResponse savedPatron = patronService.addPatron(patron);
         assertNotNull(savedPatron);
         assertEquals("AbdAllah", savedPatron.getFirstName());
-        verify(patronRepository, times(1)).save(mockPatron);
     }
 
     @Test

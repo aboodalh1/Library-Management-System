@@ -76,7 +76,6 @@ public class BookController {
     @GetMapping("/search/{title}")
     public ResponseEntity<MyAPIResponse<List<Book>>> searchBooksByTitle(@PathVariable String title) {
         List<Book> books = bookService.searchBookByTitle(title);
-        System.out.println(books);
         return ResponseEntity.ok(new MyAPIResponse<>(true, 200 , books));
     }
 

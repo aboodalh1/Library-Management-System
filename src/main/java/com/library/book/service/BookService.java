@@ -1,5 +1,4 @@
 package com.library.book.service;
-
 import com.library.book.model.Book;
 import com.library.book.request.BookDTO;
 import com.library.book.response.BooksResponse;
@@ -31,7 +30,6 @@ public class BookService {
     }
 
     public List<Book> searchBookByTitle(String title){
-        System.out.println(title);
         return bookRepository.findByTitleContainingIgnoreCase(title);
     }
 
